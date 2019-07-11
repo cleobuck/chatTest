@@ -64,13 +64,13 @@
     }
 
     //connect to socket.io
-    let socket = io.connect("http://127.0.0.1:4000");
+    let socket = io.connect("http://10.203.0.100:4000");
 
     //check for connection 
     if(socket !== undefined) {
         console.log("connected to socket....")
         // Handle Output
-        socket.on("output", data => {
+        socket.on("output", data => {  // emit from server line 47
             if (data.length) {
                 for( let i=0; i< data.length; i++) {
                     //build out message div

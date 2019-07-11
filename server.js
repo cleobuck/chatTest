@@ -44,7 +44,7 @@ db.on('open', () => {
             } else {
                 //insert message
                 chat.insertOne({name: name, message: message}, ()=> {
-                    socket.emit("output", [data]) // ---------------on from line 73
+                    client.emit("output", [data]) // ---------------on from line 73
 
                     //Send status object
                     
