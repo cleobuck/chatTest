@@ -16,6 +16,10 @@
             padding: 5px 15px;
             margin: 10px 20px;
         }
+        span {
+            display: block;
+            text-align: end;
+        }
         .contenu{
             background-image: linear-gradient(to left bottom, #05371e, #184f25, #326728, #508027, #749822);
             border-radius: 10px;
@@ -131,7 +135,7 @@
                     message.textContent = data[i].name+": " +data[i].message;
                     message.appendChild(span);
                     messages.appendChild(message);
-                    messages.insertBefore(message, messages.firstChild);
+                    // messages.insertBefore(message, messages.firstChild);
                 }
             }
         })
