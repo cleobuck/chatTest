@@ -5,7 +5,7 @@ const client = require("socket.io").listen(4000).sockets;
     //connect to mongo 
 mongo.connect('mongodb+srv://cleobuck:password123456@cluster0-rcisw.mongodb.net/chatApp?retryWrites=true&w=majority', {useNewUrlParser: true});
 
-    let db = mongo.connection;
+let db = mongo.connection;
 
 db.on('error', console.error.bind(console, 'connection error:'));
 
@@ -36,6 +36,7 @@ db.on('open', () => {
         socket.on("input", data => {
             let name = data.name;
             let message = data.message;
+            let date = data.date;
 
             //check for name and message 
             if(name == "" || message =="") {
@@ -43,7 +44,7 @@ db.on('open', () => {
                 sendStatus("Please enter a name and message")
             } else {
                 //insert message
-                chat.insertOne({name: name, message: message}, ()=> {
+                chat.insertOne({name: name, message: message, date: date}, ()=> {
                     client.emit("output", [data]) // ---------------on from line 73
 
                     //Send status object

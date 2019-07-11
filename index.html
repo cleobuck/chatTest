@@ -75,8 +75,11 @@
                 for( let i=0; i< data.length; i++) {
                     //build out message div
                     let message = document.createElement("div");
+                    let span = document.createElement("span");
+                    span.innerHTML = data[i].date
                     message.setAttribute("class", "chat-message");
                     message.textContent = data[i].name+": " +data[i].message;
+                    message.appendChild(span);
                     messages.appendChild(message);
                     messages.insertBefore(message, messages.firstChild);
                 }
@@ -94,12 +97,15 @@
         });
 
         //hande input
+        let options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+
         textarea.addEventListener("keydown", (event) => {
             if(event.which === 13 && event.shiftKey == false) {
                 //Emit to server input
                 socket.emit("input", {
                     name:username.value,
-                    message:textarea.value
+                    message:textarea.value, 
+                    date: new Date().toLocaleDateString('fr-FR', options)
                 });
                 event.preventDefault();
             }
