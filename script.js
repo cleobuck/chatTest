@@ -1,10 +1,9 @@
-(() => {
     //defining shortcut function for getElemenById
     const element = (id) => {
         return document.getElementById(id);
     }
 
-    let username
+    let username = ""
     let logOutButton = element("logout")
     let logInButton = element("log")
 
@@ -77,7 +76,7 @@
     })
 
     const loggedOut = () => {
-        username = null;
+        username = "";
         logOutButton.innerText = ''
         logOutButton.className = 'hidden';
 
@@ -116,11 +115,31 @@
     }
 
     //connect to socket.io
-    let socket = io.connect("http://10.203.0.100:4000");
+    let socket = io.connect("http://10.203.0.75:4050");
 
     //check for connection 
     if(socket !== undefined) {
-        console.log("connected to socket....")
+        socket.on("connect_error", () => {
+            let errorMsg = document.getElementById("chat-error")
+            if (!errorMsg){
+                console.log("Lost connection to Socket")
+    
+                let message = document.createElement("div");
+                message.className = "chat-message"
+                message.id = "chat-error"
+                message.textContent = "Connection lost";
+                message.style.backgroundColor = 'red'
+                messages.appendChild(message);
+            }
+        })
+
+        socket.on("connect", () => {
+            console.log("Connected to Socket")
+            let errorMsg = document.getElementById("chat-error")
+            if(errorMsg){
+                errorMsg.remove()
+            }
+        })
         // Handle Output
         socket.on("output", data => {  // emit from server line 47
 
@@ -157,10 +176,13 @@
             if(event.which === 13 && event.shiftKey == false) {
 
                 //Emit to server input
+                let date = new Date()
+                let timeStamp = date.toLocaleDateString()+' '+date.toLocaleTimeString()
+
                 socket.emit("input", {
                     name:username,
                     message:textarea.value, 
-                    date: new Date().toLocaleDateString('fr-FR', options)
+                    date: timeStamp
                 });
                 event.preventDefault();
                 
@@ -179,7 +201,7 @@
         messages.textContent = '';
         });
     }
-})()
+
 
 
 

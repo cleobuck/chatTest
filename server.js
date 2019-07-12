@@ -1,5 +1,5 @@
 const mongo = require("mongoose")
-const client = require("socket.io").listen(4000).sockets;
+const client = require("socket.io").listen(4050).sockets;
 
    
     //connect to mongo 
@@ -41,15 +41,14 @@ db.on('open', () => {
             //check for name and message 
             if(name == "" || message =="") {
                 //Send error status
-                sendStatus("Please enter a name and message")
+                if (name == "") sendStatus("Please login with Github")
+                else sendStatus("Please write a message")
             } else {
                 //insert message
                 chat.insertOne({name: name, message: message, date: date}, ()=> {
                     client.emit("output", [data]) // ---------------on from line 73
 
                     //Send status object
-                    
-
                     sendStatus({
                         message: "Message sent",
                         clear: true
