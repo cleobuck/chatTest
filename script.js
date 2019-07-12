@@ -24,7 +24,7 @@
     // Connection avec Github
     /////////////////////////////
     
-    // Boutton de connection
+    // Connection button
     logInButton.addEventListener('click', () => {
         let provider = new firebase.auth.GithubAuthProvider();
 
@@ -32,27 +32,31 @@
             // This gives you a GitHub Access Token. You can use it to access the GitHub API.
             let token = result.credential.accessToken;
             // The signed-in user info.
-
-            loggedIn(result.user.displayName)
+            loggedIn(result.user.providerData[0])
             console.log(result)
         }).catch(error => {
             console.log(error.message)
         });
     })
 
-    // Vérification si déjà connecté
-    firebase.auth().onAuthStateChanged((result) => {
-        if (result){
-            console.log(result)
-            // loggedIn(user.displayName)
+    // Verify is already connected
+    firebase.auth().onAuthStateChanged((user) => {
+        if (user){
+            console.log(user)
+            loggedIn(user.providerData[0])
         } else {
             console.log("no user signed in")
         }
     })
 
-    // Fonction de connection
-    const loggedIn = name => {
-        username = name;
+    // Logged in function
+    const loggedIn = user => {
+        if (!user.displayName){
+            username = user.email
+        } else {
+            username = user.displayName
+        }
+
         logOutButton.innerText = username+' (déconnecter)';
         logOutButton.className = '';
 
@@ -79,6 +83,10 @@
 
         logInButton.className = ''
     }
+
+    ////////////////////
+    // L'écran de chat
+    ////////////////////
 
     //get Elements 
     let status = element("status")
