@@ -41,9 +41,10 @@
     })
 
     // Vérification si déjà connecté
-    firebase.auth().onAuthStateChanged((user) => {
-        if (user){
-            loggedIn(user.displayName)
+    firebase.auth().onAuthStateChanged((result) => {
+        if (result){
+            console.log(result)
+            // loggedIn(user.displayName)
         } else {
             console.log("no user signed in")
         }
@@ -58,7 +59,26 @@
         logInButton.className = 'hidden';
     }
 
+    /////////////////////////////
+    // Déconnection de Github
+    /////////////////////////////
 
+    logOutButton.addEventListener('click', () => {
+        firebase.auth().signOut().then(() => {
+            loggedOut()
+        }).catch (err => {
+            console.error('Une erreur est survenue lors de la déconnection')
+            console.error(err)
+        })
+    })
+
+    const loggedOut = () => {
+        username = null;
+        logOutButton.innerText = ''
+        logOutButton.className = 'hidden';
+
+        logInButton.className = ''
+    }
 
     //get Elements 
     let status = element("status")
