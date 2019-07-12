@@ -1,16 +1,69 @@
-
 (() => {
-
     //defining shortcut function for getElemenById
-    let element = (id) => {
+    const element = (id) => {
         return document.getElementById(id);
     }
+
+    let username
+    let logOutButton = element("logout")
+    let logInButton = element("log")
+
+    // Configuration Firebase
+    const config = {
+        apiKey: "AIzaSyBOlkfKuDBJWc3pp44hrAlW3rTqQ5dq_pM",
+        authDomain: "becodechat.firebaseapp.com",
+        databaseURL: "https://becodechat.firebaseio.com",
+        projectId: "becodechat",
+        storageBucket: "",
+        messagingSenderId: "32762023347",
+        appId: "1:32762023347:web:4a4ffa0f3e405d67"
+    };
+    firebase.initializeApp(config)
+
+    /////////////////////////////
+    // Connection avec Github
+    /////////////////////////////
+    
+    // Boutton de connection
+    logInButton.addEventListener('click', () => {
+        let provider = new firebase.auth.GithubAuthProvider();
+
+        firebase.auth().signInWithPopup(provider).then(result => {
+            // This gives you a GitHub Access Token. You can use it to access the GitHub API.
+            let token = result.credential.accessToken;
+            // The signed-in user info.
+
+            loggedIn(result.user.displayName)
+            console.log(result)
+        }).catch(error => {
+            console.log(error.message)
+        });
+    })
+
+    // Vérification si déjà connecté
+    firebase.auth().onAuthStateChanged((user) => {
+        if (user){
+            loggedIn(user.displayName)
+        } else {
+            console.log("no user signed in")
+        }
+    })
+
+    // Fonction de connection
+    const loggedIn = name => {
+        username = name;
+        logOutButton.innerText = username+' (déconnecter)';
+        logOutButton.className = '';
+
+        logInButton.className = 'hidden';
+    }
+
+
 
     //get Elements 
     let status = element("status")
     let messages = element("messages")
     let textarea = element("textarea")
-    let username = element("username")
     let clearBtn = element("clear")
 
     //set scroll 
@@ -77,7 +130,7 @@
 
                 //Emit to server input
                 socket.emit("input", {
-                    name:username.value,
+                    name:username,
                     message:textarea.value, 
                     date: new Date().toLocaleDateString('fr-FR', options)
                 });
