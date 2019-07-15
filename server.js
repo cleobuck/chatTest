@@ -2,8 +2,9 @@ const mongo = require("mongoose");
 const express = require("express");
 const app = express();
 app.use(express.static(__dirname + "/"));
-   
-let server = app.listen(80);
+
+const port = process.env.PORT || 4050
+let server = app.listen(port);
 let client =  require("socket.io")(server);
 
 app.get("/", (req, res) => {
