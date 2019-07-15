@@ -3,7 +3,7 @@ const express = require("express");
 const app = express();
 app.use(express.static(__dirname + "/"));
    
-let server = app.listen(4050);
+let server = app.listen(80);
 let client =  require("socket.io")(server);
 
 app.get("/", (req, res) => {
