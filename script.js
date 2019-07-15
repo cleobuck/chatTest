@@ -115,7 +115,7 @@
     }
 
     //connect to socket.io
-    let socket = io.connect("http://10.203.0.75:4050");
+    let socket = io.connect();
 
     //check for connection 
     if(socket !== undefined) {

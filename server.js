@@ -1,7 +1,15 @@
-const mongo = require("mongoose")
-const client = require("socket.io").listen(4050).sockets;
-
+const mongo = require("mongoose");
+const express = require("express");
+const app = express();
+app.use(express.static(__dirname + "/"));
    
+let server = app.listen(4050);
+let client =  require("socket.io")(server);
+
+app.get("/", (req, res) => {
+    res.sendFile(__dirname + "/index.html")
+})
+
     //connect to mongo 
 mongo.connect('mongodb+srv://cleobuck:password123456@cluster0-rcisw.mongodb.net/chatApp?retryWrites=true&w=majority', {useNewUrlParser: true});
 
